@@ -36,15 +36,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'Hello World!',
-            ),
-          ],
-        ),
-      ),
+          child: Text(
+        '19021341 Nguyen Duy Ngoc',
+      )),
     );
   }
 }
