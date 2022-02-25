@@ -1,6 +1,6 @@
-# flutterplayground
+# Flutter Playground
 
-A new Flutter project.
+19021341 - Nguyen Duy Ngoc
 
 ## Getting Started
 
