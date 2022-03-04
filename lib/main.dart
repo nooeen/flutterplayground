@@ -33,7 +33,17 @@ class MyHomePage extends StatelessWidget {
         body: ListView.builder(
           itemCount: items.length,
           itemBuilder: (context, index) {
-            return ProductBox(item: items[index]);
+            return GestureDetector(
+              child: ProductBox(item: items[index]),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductPage(item: items[index]),
+                  ),
+                );
+              },
+            );
           },
         ));
   }
@@ -139,6 +149,50 @@ class RatingBox extends StatelessWidget {
               iconSize: _size,
             )),
       ],
+    );
+  }
+}
+
+class ProductPage extends StatelessWidget {
+  const ProductPage({Key? key, required this.item}) : super(key: key);
+  final Product item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(item.name),
+      ),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset("assets/images/" + item.image),
+                Expanded(
+                    child: Container(
+                        padding: const EdgeInsets.all(0),
+                        child: ScopedModel<Product>(
+                            model: item,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text(item.name,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                                Text(item.description),
+                                Text("Price: " + item.price.toString()),
+                                ScopedModelDescendant<Product>(
+                                    builder: (context, child, item) {
+                                  return RatingBox(item: item);
+                                })
+                              ],
+                            ))))
+              ]),
+        ),
+      ),
     );
   }
 }
