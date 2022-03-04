@@ -145,7 +145,18 @@ class MyHomePage extends StatelessWidget {
           content: const Text("Hello World"),
           actions: <Widget>[
             TextButton(
-              child: const Text("Close"),
+              child: const Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                        text: "Hello ",
+                        style: TextStyle(fontStyle: FontStyle.italic)),
+                    TextSpan(
+                        text: "World",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -164,12 +175,19 @@ class MyHomePage extends StatelessWidget {
       ),
       body: Center(
           child: GestureDetector(
-              onTap: () {
-                _showDialog(context);
-              },
-              child: const Text(
-                'Hello World',
-              ))),
+        onTap: () {
+          _showDialog(context);
+        },
+        child: const Text(
+          'Hello World',
+          style: TextStyle(
+            color: Colors.red,
+            letterSpacing: 0.5,
+            fontSize: 30,
+          ),
+          textDirection: TextDirection.ltr,
+        ),
+      )),
     );
   }
 }
