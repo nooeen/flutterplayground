@@ -17,6 +17,9 @@
   <p align="center">
     A Flutter Project for the purpose of learning the fundamentals of Flutter!
   </p>
+  <a align="center" href="https://github.com/nooeen/flutterplayground/tree/main">Main App </a> |
+  <a align="center" href="https://github.com/nooeen/flutterplayground/tree/browser">Browser App </a> |
+  <a align="center" href="https://github.com/nooeen/flutterplayground/tree/hello-world">Hello World App </a>
 </div>
 
 <br/>
