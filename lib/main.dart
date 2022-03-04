@@ -6,24 +6,53 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 10), vsync: this);
+    animation = Tween<double>(begin: 0.0, end: 1.0).animate(controller);
+    controller.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Playground',
       theme: ThemeData(primarySwatch: Colors.grey),
-      home: MyHomePage(title: 'Playground'),
+      home: MyHomePage(
+        title: 'Playground',
+        animation: animation,
+      ),
       // home: const MyButton(),
       debugShowCheckedModeBanner: false,
     );
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }
 
 class MyHomePage extends StatelessWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title, required this.animation})
+      : super(key: key);
   final String title;
   final items = Product.getProducts();
+  final Animation<double> animation;
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +62,19 @@ class MyHomePage extends StatelessWidget {
         body: ListView.builder(
           itemCount: items.length,
           itemBuilder: (context, index) {
-            return GestureDetector(
-              child: ProductBox(item: items[index]),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductPage(item: items[index]),
-                  ),
-                );
-              },
-            );
+            return FadeTransition(
+                opacity: animation,
+                child: GestureDetector(
+                  child: ProductBox(item: items[index]),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductPage(item: items[index]),
+                      ),
+                    );
+                  },
+                ));
           },
         ));
   }
