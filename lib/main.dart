@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'product.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Playground',
       theme: ThemeData(primarySwatch: Colors.grey),
-      home: const MyHomePage(title: 'Playground'),
+      home: MyHomePage(title: 'Playground'),
       // home: const MyButton(),
       debugShowCheckedModeBanner: false,
     );
@@ -19,67 +21,27 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
+  final items = Product.getProducts();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(title: Text(title)),
-        body: SingleChildScrollView(
-          child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.fromLTRB(2.0, 10.0, 2.0, 10.0),
-              children: const <Widget>[
-                ProductBox(
-                  name: 'Brave Enough',
-                  description: 'Lindsey Stirling',
-                  price: 275,
-                  image: 'braveenough.jpg',
-                ),
-                ProductBox(
-                  name: 'Starboy',
-                  description: 'The Weeknd',
-                  price: 275,
-                  image: 'starboy.jpg',
-                ),
-                ProductBox(
-                  name: 'Kaleidoscope',
-                  description: 'Coldplay',
-                  price: 275,
-                  image: 'kaleidoscope.jpg',
-                ),
-                ProductBox(
-                  name: 'What We Drew',
-                  description: 'Yaeji',
-                  price: 275,
-                  image: 'whatwedrew.jpg',
-                ),
-                ProductBox(
-                  name: 'Future Nostalagia',
-                  description: 'Dua Lipa',
-                  price: 275,
-                  image: 'futurenostalagia.jpg',
-                ),
-              ]),
+        body: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return ProductBox(item: items[index]);
+          },
         ));
   }
 }
 
 class ProductBox extends StatelessWidget {
-  const ProductBox(
-      {Key? key,
-      required this.name,
-      required this.description,
-      required this.price,
-      required this.image})
-      : super(key: key);
-
-  final String name;
-  final String description;
-  final int price;
-  final String image;
+  const ProductBox({Key? key, required this.item}) : super(key: key);
+  final Product item;
 
   @override
   Widget build(BuildContext context) {
@@ -90,52 +52,33 @@ class ProductBox extends StatelessWidget {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-              Image.asset("assets/images/" + image),
+              Image.asset("assets/images/" + item.image),
               Expanded(
                   child: Container(
                       padding: const EdgeInsets.fromLTRB(10, 9, 10, 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text(name,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                          Text(description),
-                          Text("Price: " + price.toString()),
-                          const RatingBox(),
-                        ],
-                      )))
+                      child: ScopedModel<Product>(
+                          model: item,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Text(item.name,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                              Text(item.description),
+                              Text("Price: " + item.price.toString()),
+                              ScopedModelDescendant<Product>(
+                                  builder: (context, child, item) {
+                                return RatingBox(item: item);
+                              })
+                            ],
+                          ))))
             ])));
   }
 }
 
-class RatingBox extends StatefulWidget {
-  const RatingBox({Key? key}) : super(key: key);
-
-  @override
-  _RatingBoxState createState() => _RatingBoxState();
-}
-
-class _RatingBoxState extends State<RatingBox> {
-  int _rating = 0;
-
-  void _setRatingAsOne() {
-    setState(() {
-      _rating = 1;
-    });
-  }
-
-  void _setRatingAsTwo() {
-    setState(() {
-      _rating = 2;
-    });
-  }
-
-  void _setRatingAsThree() {
-    setState(() {
-      _rating = 3;
-    });
-  }
+class RatingBox extends StatelessWidget {
+  const RatingBox({Key? key, required this.item}) : super(key: key);
+  final Product item;
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +93,7 @@ class _RatingBoxState extends State<RatingBox> {
         Container(
             padding: const EdgeInsets.all(0),
             child: IconButton(
-              icon: (_rating >= 1
+              icon: (item.rating >= 1
                   ? Icon(
                       Icons.star,
                       size: _size,
@@ -160,13 +103,13 @@ class _RatingBoxState extends State<RatingBox> {
                       size: _size,
                     )),
               color: Colors.red[500],
-              onPressed: _setRatingAsOne,
+              onPressed: () => item.updateRating(1),
               iconSize: _size,
             )),
         Container(
             padding: const EdgeInsets.all(0),
             child: IconButton(
-              icon: (_rating >= 2
+              icon: (item.rating >= 2
                   ? Icon(
                       Icons.star,
                       size: _size,
@@ -176,13 +119,13 @@ class _RatingBoxState extends State<RatingBox> {
                       size: _size,
                     )),
               color: Colors.red[500],
-              onPressed: _setRatingAsTwo,
+              onPressed: () => item.updateRating(2),
               iconSize: _size,
             )),
         Container(
             padding: const EdgeInsets.all(0),
             child: IconButton(
-              icon: (_rating >= 3
+              icon: (item.rating >= 3
                   ? Icon(
                       Icons.star,
                       size: _size,
@@ -192,7 +135,7 @@ class _RatingBoxState extends State<RatingBox> {
                       size: _size,
                     )),
               color: Colors.red[500],
-              onPressed: _setRatingAsThree,
+              onPressed: () => item.updateRating(3),
               iconSize: _size,
             )),
       ],
