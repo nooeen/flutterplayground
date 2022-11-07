@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Brave Enough",
+    "description": "Lindsey Stirling",
+    "price": 800,
+    "image": "braveenough.jpg"
+  },
+  {
+    "name": "Starboy",
+    "description": "The Weeknd",
+    "price": 2000,
+    "image": "starboy.jpg"
+  },
+  {
+    "name": "Kaleidoscope",
+    "description": "Coldplay",
+    "price": "1500",
+    "image": "kaleidoscope.jpg"
+  },
+  {
+    "name": "What We Drew",
+    "description": "Yaeji",
+    "price": 1000,
+    "image": "whatwedrew.jpg"
+  },
+  {
+    "name": "Future Nostalagia",
+    "description": "Dua Lipa",
+    "price": 1500,
+    "image": "futurenostalagia.jpg"
+  }
+]
